@@ -35,8 +35,8 @@ void skipSpaces() {
 
 int parseTree() {
     skipSpaces();
-    if (*ptr != '(') return ERROR;
-    ptr++;
+    if (*ptr != '(') return ERROR; // '('로 시작하지 않으면 오류
+    ptr++; // '(' 소비
 
     skipSpaces();
     if (*ptr == ')') { // 빈 괄호
@@ -49,31 +49,25 @@ int parseTree() {
     ptr++;
 
     int childCount = 0;
+    int result = TRUE; // 기본은 TRUE
     while (1) {
         skipSpaces();
-        if (*ptr == '(') {
+        if (*ptr == '(') { // 서브트리 존재
             childCount++;
-            if (childCount > 2) return FALSE; // 자식 3개 이상 → FALSE
             int r = parseTree();
-            if (r != TRUE) return r;
+            if (r == ERROR) return ERROR;
+            if (childCount > 2) result = FALSE; // 자식 3개 이상 → FALSE
         }
-        else if (isalpha(*ptr)) {
-            // 단독 알파벳 자식
-            childCount++;
+        else if (*ptr == ')') { // 현재 노드 종료
+            ptr++;
             if (childCount > 2) return FALSE;
-            ptr++;
+            return result; // 0~2 자식이면 TRUE, 3개 이상이면 FALSE
         }
-        else if (*ptr == ')') {
-            ptr++;
-            return TRUE; // 노드 끝
-        }
-        else if (*ptr == '\0' || *ptr == '\n') {
+        else if (*ptr == '\0' || *ptr == '\n') { // 입력 끝
             return ERROR;
         }
-        else {
+        else { // 괄호 없이 알파벳 나오면 ERROR
             return ERROR;
         }
     }
 }
-
-

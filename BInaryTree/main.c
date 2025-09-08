@@ -3,7 +3,8 @@
 
 int main() {
     char input[1000];
-    fgets(input, sizeof(input), stdin);
+	printf("Input: \n");
+    fgets(input, sizeof(input), stdin); //문자열 입력 받기
 
     // 줄바꿈 검사
     for (int i = 0; input[i]; i++) {
@@ -18,7 +19,7 @@ int main() {
 
     skipSpaces();
     if (*ptr != '\0' && *ptr != '\n') result = ERROR;
-
+	printf("Output: \n");
     if (result == TRUE) printf("TRUE\n");
     else if (result == FALSE) printf("FALSE\n");
     else printf("ERROR\n");

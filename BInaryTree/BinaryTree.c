@@ -18,37 +18,37 @@ void skipSpaces()
     }
 }
 
-int parseTree() {
-    skipSpaces();
+int parseTree() { // 트리 파싱 함수
+    skipSpaces(); //공백 건너뛰기
 
     if (*ptr != '(') return ERROR;
-    ptr++; // '(' 지나가기
+    ptr++; // '(' 로 시작 안하면 ERROR -> 문법 오류
 
     skipSpaces();
 
     // 빈 괄호 처리
     if (*ptr == ')') {
-        ptr++;
+		ptr++; // ')' 이면 TRUE 반환 (빈 트리)
         return TRUE;
     }
 
-    int children = 0;
-    int res;
+    int children = 0; //자식 노드 개수 0으로 초기화
+    int res; //res 결과 변수 생성
 
-    while (*ptr != ')' && *ptr != '\0') {
-        if (isalpha(*ptr)) {
-            ptr++;
-            children++;
+	while (*ptr != ')' && *ptr != '\0') { //')' 또는 문자열 끝까지 반복
+        if (isalpha(*ptr)) { //영문자이면
+            ptr++; //다음 문자로 이동
+            children++; //자식 노드 개수 증가
             if (children > 2) res = FALSE; // 자식 3개 이상 → FALSE
-            else res = TRUE;
+			else res = TRUE; // 자식 2개 이하 → TRUE
         }
-        else if (*ptr == '(') {
-            res = parseTree();
-            if (res == ERROR) return ERROR;
-            children++;
-            if (children > 2) res = FALSE;
+        else if (*ptr == '(') { // '(' 이면 다시 재귀 호출
+            res = parseTree(); //res 변수에 재귀 호출한 결과를 저장
+            if (res == ERROR) return ERROR; //재귀 호출할때 ERROR 시 ( 시작 할떄 '(' 가 아닐때 ERROR
+			children++; //res가 ERROR가 아니면 자식 노드 개수 증가
+			if (children > 2) res = FALSE; // 자식 3개 이상 → FALSE
         }
-        else if (isspace(*ptr)) {
+		else if (isspace(*ptr)) { //공백이면 건너뛰기
             ptr++;
             continue;
         }
@@ -59,8 +59,8 @@ int parseTree() {
     }
 
     if (*ptr != ')') return ERROR;
-    ptr++;
+	ptr++; // ')' 로 끝나지 않으면 ERROR -> 문법 오류
 
-    return (children > 2) ? FALSE : TRUE;
+	return (children > 2) ? FALSE : TRUE; // 자식 3개 이상 → FALSE, 아니면 TRUE
 }
 
