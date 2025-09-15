@@ -12,7 +12,8 @@ char* ptr; //입력 문자열을 탐색할 전역 포인터
 
 int parseTree();
 //트리를 파싱하는 함수 (파싱: 문자열을 의미단위로 해석)
-
+//int parseNode();
+//int parseChildren();
 
 void skipSpaces();
 //공백문자를 건너뛰는 함수
