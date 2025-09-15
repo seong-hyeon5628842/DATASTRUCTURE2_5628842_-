@@ -1,6 +1,5 @@
 #include"BinaryTree.h"
 
-
 int main() {
     char input[1000];
 	printf("Input: \n");

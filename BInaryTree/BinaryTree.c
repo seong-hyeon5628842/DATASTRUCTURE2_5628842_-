@@ -1,66 +1,66 @@
-/*
-ÀÔ·Â ¹®ÀÚ¿­ °ø¹é Á¦°Å -> ÁÙ¹Ù²ÞÀÌ ÀÖÀ¸¸é ERROR
-Àç±Í ÆÄ½Ì ÇÔ¼ö parsNode() -> ÇöÀç Æ÷ÀÎÅÍ°¡ (ÀÌ¸é 
-±× ¾È¿¡¼­ ³ëµå¸¦ ÀÐÀ½ -> ÀÚ½Ä ³ëµå°¡ 2°³ ÃÊ°úÇÏ¸é FALSE ¹ÝÈ¯
-) ¸¸³ª¸é Á¾·á. ÇöÀç Æ÷ÀÎÅÍ°¡ ¿µ¹®ÀÚÀÌ¸é -> ÇÑ±ÛÀÚ ¼ÒºñÇÏ°í return
-ÇöÀçÆ÷ÀÎÅÍ°¡ ()ÀÌ¸é null ÀÚ½Ä -> Çã¿ë
+ï»¿/*
+ìž…ë ¥ ë¬¸ìžì—´ ê³µë°± ì œê±° -> ì¤„ë°”ê¿ˆì´ ìžˆìœ¼ë©´ ERROR
+ìž¬ê·€ íŒŒì‹± í•¨ìˆ˜ parsNode() -> í˜„ìž¬ í¬ì¸í„°ê°€ (ì´ë©´ 
+ê·¸ ì•ˆì—ì„œ ë…¸ë“œë¥¼ ì½ìŒ -> ìžì‹ ë…¸ë“œê°€ 2ê°œ ì´ˆê³¼í•˜ë©´ FALSE ë°˜í™˜
+) ë§Œë‚˜ë©´ ì¢…ë£Œ. í˜„ìž¬ í¬ì¸í„°ê°€ ì˜ë¬¸ìžì´ë©´ -> í•œê¸€ìž ì†Œë¹„í•˜ê³  return
+í˜„ìž¬í¬ì¸í„°ê°€ ()ì´ë©´ null ìžì‹ -> í—ˆìš©
 */
 #include "BinaryTree.h"
 
-
+char* ptr; //ìž…ë ¥ ë¬¸ìžì—´ì„ íƒìƒ‰í•  ì „ì—­ í¬ì¸í„°
 void skipSpaces()
 {
-    //¹®ÀÚÇü Æ÷ÀÎÅÍ ptrÀÌ ¸¶Áö¸·Àº 0°ª ÀÌ±â¿¡ 
-    //isspace´Â °ø¹éÀÌ¸é 0 ¾Æ´Ï¸é 0 ÀÌ¿ÜÀÇ ¼ö
-    // ºñ¾îÀÖ´Â °ªÀ» °¡¸®Å°Áö ¾Ê°í °ø¹éÀÌ ¾Æ´Ï¸é ptr ++ ½ÇÇà ¹Ýº¹
+    //ë¬¸ìží˜• í¬ì¸í„° ptrì´ ë§ˆì§€ë§‰ì€ 0ê°’ ì´ê¸°ì— 
+    //isspaceëŠ” ê³µë°±ì´ë©´ 0 ì•„ë‹ˆë©´ 0 ì´ì™¸ì˜ ìˆ˜
+    // ë¹„ì–´ìžˆëŠ” ê°’ì„ ê°€ë¦¬í‚¤ì§€ ì•Šê³  ê³µë°±ì´ ì•„ë‹ˆë©´ ptr ++ ì‹¤í–‰ ë°˜ë³µ
     while (*ptr && isspace(*ptr)) {
         ptr++;
     }
 }
 
-int parseTree() { // Æ®¸® ÆÄ½Ì ÇÔ¼ö
-    skipSpaces(); //°ø¹é °Ç³Ê¶Ù±â
+int parseTree() { // íŠ¸ë¦¬ íŒŒì‹± í•¨ìˆ˜
+    skipSpaces(); //ê³µë°± ê±´ë„ˆë›°ê¸°
 
     if (*ptr != '(') return ERROR;
-    ptr++; // '(' ·Î ½ÃÀÛ ¾ÈÇÏ¸é ERROR -> ¹®¹ý ¿À·ù
+    ptr++; // '(' ë¡œ ì‹œìž‘ ì•ˆí•˜ë©´ ERROR -> ë¬¸ë²• ì˜¤ë¥˜
 
     skipSpaces();
 
-    // ºó °ýÈ£ Ã³¸®
+    // ë¹ˆ ê´„í˜¸ ì²˜ë¦¬
     if (*ptr == ')') {
-		ptr++; // ')' ÀÌ¸é TRUE ¹ÝÈ¯ (ºó Æ®¸®)
+		ptr++; // ')' ì´ë©´ TRUE ë°˜í™˜ (ë¹ˆ íŠ¸ë¦¬)
         return TRUE;
     }
 
-    int children = 0; //ÀÚ½Ä ³ëµå °³¼ö 0À¸·Î ÃÊ±âÈ­
-    int res; //res °á°ú º¯¼ö »ý¼º
+    int children = 0; //ìžì‹ ë…¸ë“œ ê°œìˆ˜ 0ìœ¼ë¡œ ì´ˆê¸°í™”
+    int res; //res ê²°ê³¼ ë³€ìˆ˜ ìƒì„±
 
-	while (*ptr != ')' && *ptr != '\0') { //')' ¶Ç´Â ¹®ÀÚ¿­ ³¡±îÁö ¹Ýº¹
-        if (isalpha(*ptr)) { //¿µ¹®ÀÚÀÌ¸é
-            ptr++; //´ÙÀ½ ¹®ÀÚ·Î ÀÌµ¿
-            children++; //ÀÚ½Ä ³ëµå °³¼ö Áõ°¡
-            if (children > 2) res = FALSE; // ÀÚ½Ä 3°³ ÀÌ»ó ¡æ FALSE
-			else res = TRUE; // ÀÚ½Ä 2°³ ÀÌÇÏ ¡æ TRUE
+	while (*ptr != ')' && *ptr != '\0') { //')' ë˜ëŠ” ë¬¸ìžì—´ ëê¹Œì§€ ë°˜ë³µ
+        if (isalpha(*ptr)) { //ì˜ë¬¸ìžì´ë©´
+            ptr++; //ë‹¤ìŒ ë¬¸ìžë¡œ ì´ë™
+            children++; //ìžì‹ ë…¸ë“œ ê°œìˆ˜ ì¦ê°€
+            if (children > 2) res = FALSE; // ìžì‹ 3ê°œ ì´ìƒ â†’ FALSE
+			else res = TRUE; // ìžì‹ 2ê°œ ì´í•˜ â†’ TRUE
         }
-        else if (*ptr == '(') { // '(' ÀÌ¸é ´Ù½Ã Àç±Í È£Ãâ
-            res = parseTree(); //res º¯¼ö¿¡ Àç±Í È£ÃâÇÑ °á°ú¸¦ ÀúÀå
-            if (res == ERROR) return ERROR; //Àç±Í È£ÃâÇÒ¶§ ERROR ½Ã ( ½ÃÀÛ ÇÒ‹š '(' °¡ ¾Æ´Ò¶§ ERROR
-			children++; //res°¡ ERROR°¡ ¾Æ´Ï¸é ÀÚ½Ä ³ëµå °³¼ö Áõ°¡
-			if (children > 2) res = FALSE; // ÀÚ½Ä 3°³ ÀÌ»ó ¡æ FALSE
+        else if (*ptr == '(') { // '(' ì´ë©´ ë‹¤ì‹œ ìž¬ê·€ í˜¸ì¶œ
+            res = parseTree(); //res ë³€ìˆ˜ì— ìž¬ê·€ í˜¸ì¶œí•œ ê²°ê³¼ë¥¼ ì €ìž¥
+            if (res == ERROR) return ERROR; //ìž¬ê·€ í˜¸ì¶œí• ë•Œ ERROR ì‹œ ( ì‹œìž‘ í• ë–„ '(' ê°€ ì•„ë‹ë•Œ ERROR
+			children++; //resê°€ ERRORê°€ ì•„ë‹ˆë©´ ìžì‹ ë…¸ë“œ ê°œìˆ˜ ì¦ê°€
+			if (children > 2) res = FALSE; // ìžì‹ 3ê°œ ì´ìƒ â†’ FALSE
         }
-		else if (isspace(*ptr)) { //°ø¹éÀÌ¸é °Ç³Ê¶Ù±â
+		else if (isspace(*ptr)) { //ê³µë°±ì´ë©´ ê±´ë„ˆë›°ê¸°
             ptr++;
             continue;
         }
         else {
-            return ERROR; // ¾Ë ¼ö ¾ø´Â ¹®ÀÚ
+            return ERROR; // ì•Œ ìˆ˜ ì—†ëŠ” ë¬¸ìž
         }
         skipSpaces();
     }
 
     if (*ptr != ')') return ERROR;
-	ptr++; // ')' ·Î ³¡³ªÁö ¾ÊÀ¸¸é ERROR -> ¹®¹ý ¿À·ù
+	ptr++; // ')' ë¡œ ëë‚˜ì§€ ì•Šìœ¼ë©´ ERROR -> ë¬¸ë²• ì˜¤ë¥˜
 
-	return (children > 2) ? FALSE : TRUE; // ÀÚ½Ä 3°³ ÀÌ»ó ¡æ FALSE, ¾Æ´Ï¸é TRUE
+	return (children > 2) ? FALSE : TRUE; // ìžì‹ 3ê°œ ì´ìƒ â†’ FALSE, ì•„ë‹ˆë©´ TRUE
 }
 
